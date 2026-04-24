@@ -441,27 +441,59 @@
         }
 
         /* =========================================
-           Hero Section
+           Hero Carousel
            ========================================= */
         .hero {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            background: linear-gradient(135deg, var(--primary-900) 0%, var(--primary-800) 50%, var(--primary-700) 100%);
             position: relative;
+            min-height: 100vh;
             overflow: hidden;
             padding-top: 72px;
         }
 
-        .hero::before {
+        /* 轮播轨道 */
+        .hero-track {
+            display: flex;
+            width: 300%;
+            height: 100%;
+            transition: transform 0.8s cubic-bezier(0.77, 0, 0.175, 1);
+        }
+
+        /* 每一屏 */
+        .hero-slide {
+            width: calc(100% / 3);
+            min-height: calc(100vh - 72px);
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-slide::before {
             content: '';
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
+            inset: 0;
             background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
             opacity: 0.5;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .hero-slide--1 {
+            background: linear-gradient(135deg, rgba(10,37,64,0.85) 0%, rgba(13,59,102,0.80) 50%, rgba(0,91,150,0.75) 100%),
+                        url('img/home/S1.jpg') center/cover no-repeat;
+        }
+        .hero-slide--2 {
+            background: linear-gradient(135deg, rgba(13,59,102,0.85) 0%, rgba(0,91,150,0.80) 40%, rgba(0,119,194,0.75) 100%),
+                        url('img/home/S2.jpg') center/cover no-repeat;
+        }
+        .hero-slide--3 {
+            background: linear-gradient(135deg, rgba(10,37,64,0.85) 0%, rgba(26,74,128,0.80) 50%, rgba(0,91,150,0.75) 100%),
+                        url('img/home/S3.jpg') center/cover no-repeat;
+        }
+
+        .hero-slide .container {
+            position: relative;
+            z-index: 1;
         }
 
         .hero-content {
@@ -522,46 +554,81 @@
             gap: var(--space-4);
         }
 
-        .hero-stats {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: var(--space-8);
-            margin-top: var(--space-16);
-            padding-top: var(--space-8);
-            border-top: 1px solid rgba(255,255,255,0.1);
-        }
-
-        @media (min-width: 640px) {
-            .hero-stats {
-                grid-template-columns: repeat(4, 1fr);
-            }
-        }
-
-        .hero-stat {
-            text-align: center;
-        }
-
-        .hero-stat-value {
-            font-size: var(--text-3xl);
-            font-weight: 700;
-            color: white;
-        }
-
-        .hero-stat-label {
-            font-size: var(--text-sm);
-            color: rgba(255,255,255,0.6);
-            margin-top: var(--space-1);
-        }
-
-        /* Hero decorative elements */
-        .hero-decoration {
+        /* 左右切换箭头 */
+        .hero-arrow {
             position: absolute;
-            right: -10%;
             top: 50%;
             transform: translateY(-50%);
-            width: 600px;
-            height: 600px;
-            opacity: 0.1;
+            z-index: 10;
+            width: 48px;
+            height: 48px;
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            cursor: pointer;
+            transition: background var(--transition-base);
+            backdrop-filter: blur(4px);
+        }
+
+        .hero-arrow:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .hero-arrow--prev { left: var(--space-6); }
+        .hero-arrow--next { right: var(--space-6); }
+
+        /* 底部圆点指示器 */
+        .hero-dots {
+            position: absolute;
+            bottom: var(--space-8);
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+            display: flex;
+            gap: var(--space-3);
+        }
+
+        .hero-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.4);
+            cursor: pointer;
+            transition: all var(--transition-base);
+            border: none;
+            padding: 0;
+        }
+
+        .hero-dot.active {
+            background: white;
+            transform: scale(1.3);
+        }
+
+        /* 幻灯片内容进入动画 */
+        .hero-slide .hero-content {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.7s ease 0.3s, transform 0.7s ease 0.3s;
+        }
+
+        .hero-slide.is-active .hero-content {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* 右侧装饰图形 */
+        .hero-decoration {
+            position: absolute;
+            right: -5%;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 480px;
+            height: 480px;
+            opacity: 0.08;
             display: none;
         }
 
@@ -887,30 +954,6 @@
             font-size: var(--text-sm);
             color: var(--gray-600);
             line-height: 1.6;
-            margin-bottom: var(--space-4);
-        }
-
-        .solution-card__features {
-            list-style: none;
-            display: flex;
-            flex-wrap: wrap;
-            gap: var(--space-2);
-        }
-
-        .solution-card__features li {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: var(--text-xs);
-            color: var(--gray-700);
-            background: var(--gray-100);
-            padding: 4px 10px;
-            border-radius: var(--radius-full);
-        }
-
-        .solution-card__features li svg {
-            color: var(--primary-700);
-            flex-shrink: 0;
         }
 
         /* =========================================
@@ -991,14 +1034,10 @@
             align-items: center;
             justify-content: center;
             height: 100px;
-            filter: grayscale(100%);
-            opacity: 0.7;
             transition: all var(--transition-base);
         }
 
         .partner-card:hover {
-            filter: grayscale(0%);
-            opacity: 1;
             box-shadow: var(--shadow-md);
         }
 
@@ -1385,58 +1424,109 @@
     </div>
     <div class="overlay" id="overlay"></div>
 
-    <!-- Hero Section -->
+    <!-- Hero Carousel -->
     <section class="hero" id="home">
-        <div class="container">
-            <div class="hero-content">
-                <div class="hero-label">专业工控机制造商</div>
-                <h1 class="hero-title">
-                    稳定可靠的<br>
-                    工业控制解决方案
-                </h1>
-                <p class="hero-desc">
-                    专注工控机、嵌入式工控机、工业一体机制造，为智能制造、轨道交通、物联网等领域提供7×24小时稳定运行的工业级产品。
-                </p>
-                <div class="hero-buttons">
-                    <a href="#products" class="btn btn-primary btn-lg">
-                        了解产品
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M5 12h14M12 5l7 7-7 7"/>
-                        </svg>
-                    </a>
-                    <a href="#contact" class="btn btn-ghost btn-lg">联系我们</a>
+        <!-- 轮播轨道 -->
+        <div class="hero-track" id="heroTrack">
+
+            <!-- 第一屏：品牌主张 -->
+            <div class="hero-slide hero-slide--1 is-active">
+                <div class="container">
+                    <div class="hero-content">
+                        <div class="hero-label">专业工控机制造商</div>
+                        <h1 class="hero-title">
+                            稳定可靠的<br>
+                            工业控制解决方案
+                        </h1>
+                        <p class="hero-desc">
+                            苏州安驰电子科技有限公司深耕工控领域20余年，专注嵌入式工控机、壁挂式工控机、工业一体机研发与制造，为工业客户提供7×24小时稳定运行的工业级产品。
+                        </p>
+                        <div class="hero-buttons">
+                            <a href="#products" class="btn btn-primary btn-lg">
+                                了解产品
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                            </a>
+                            <a href="#contact" class="btn btn-ghost btn-lg">联系我们</a>
+                        </div>
+                    </div>
                 </div>
-                
-                <div class="hero-stats">
-                    <div class="hero-stat">
-                        <div class="hero-stat-value">15+</div>
-                        <div class="hero-stat-label">年行业经验</div>
-                    </div>
-                    <div class="hero-stat">
-                        <div class="hero-stat-value">500+</div>
-                        <div class="hero-stat-label">合作客户</div>
-                    </div>
-                    <div class="hero-stat">
-                        <div class="hero-stat-value">50+</div>
-                        <div class="hero-stat-label">产品型号</div>
-                    </div>
-                    <div class="hero-stat">
-                        <div class="hero-stat-value">99.9%</div>
-                        <div class="hero-stat-label">产品合格率</div>
-                    </div>
+                <div class="hero-decoration">
+                    <svg viewBox="0 0 200 200"><path d="M100,10 L120,80 L190,80 L130,120 L150,190 L100,150 L50,190 L70,120 L10,80 L80,80 Z"/></svg>
                 </div>
             </div>
-        </div>
-        
-        <div class="hero-decoration">
-            <svg viewBox="0 0 200 200">
-                <path d="M100,10 L120,80 L190,80 L130,120 L150,190 L100,150 L50,190 L70,120 L10,80 L80,80 Z"/>
-            </svg>
+
+            <!-- 第二屏：核心产品 -->
+            <div class="hero-slide hero-slide--2">
+                <div class="container">
+                    <div class="hero-content">
+                        <div class="hero-label">核心产品系列</div>
+                        <h1 class="hero-title">
+                            多系列工控产品<br>
+                            覆盖全场景需求
+                        </h1>
+                        <p class="hero-desc">
+                            从嵌入式工控机到机架式服务器，从壁挂式工控机到工业触控一体机，安驰电子提供50余款成熟产品型号，满足智能制造、轨道交通、物联网等多元应用场景。
+                        </p>
+                        <div class="hero-buttons">
+                            <a href="#products" class="btn btn-primary btn-lg">
+                                查看全部产品
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                            </a>
+                            <a href="#solutions" class="btn btn-ghost btn-lg">行业解决方案</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="hero-decoration">
+                    <svg viewBox="0 0 200 200"><rect x="20" y="20" width="160" height="160" rx="20"/><rect x="50" y="50" width="100" height="100" rx="10"/></svg>
+                </div>
+            </div>
+
+            <!-- 第三屏：行业解决方案 -->
+            <div class="hero-slide hero-slide--3">
+                <div class="container">
+                    <div class="hero-content">
+                        <div class="hero-label">行业解决方案</div>
+                        <h1 class="hero-title">
+                            深耕六大行业<br>
+                            赋能智能升级
+                        </h1>
+                        <p class="hero-desc">
+                            覆盖智能制造、轨道交通、电力通讯、机器视觉、新能源汽车、智慧物流六大行业，以高可靠工业计算平台驱动各行业数字化转型，助力企业降本增效。
+                        </p>
+                        <div class="hero-buttons">
+                            <a href="#solutions" class="btn btn-primary btn-lg">
+                                探索解决方案
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                            </a>
+                            <a href="#contact" class="btn btn-ghost btn-lg">获取方案咨询</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="hero-decoration">
+                    <svg viewBox="0 0 200 200"><circle cx="100" cy="100" r="80"/><circle cx="100" cy="100" r="50"/><circle cx="100" cy="100" r="20"/></svg>
+                </div>
+            </div>
+
+        </div><!-- /.hero-track -->
+
+        <!-- 左右箭头 -->
+        <button class="hero-arrow hero-arrow--prev" id="heroPrev" aria-label="上一屏">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+        <button class="hero-arrow hero-arrow--next" id="heroNext" aria-label="下一屏">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+        </button>
+
+        <!-- 圆点指示器 -->
+        <div class="hero-dots" id="heroDots">
+            <button class="hero-dot active" data-index="0" aria-label="第1屏"></button>
+            <button class="hero-dot" data-index="1" aria-label="第2屏"></button>
+            <button class="hero-dot" data-index="2" aria-label="第3屏"></button>
         </div>
     </section>
 
-    <!-- Stats Section -->
-    <section class="stats-section">
+    <!-- Stats Section（已隐藏） -->
+    <section class="stats-section" style="display:none;">
         <div class="container">
             <div class="stats-grid stagger-children" id="statsSection">
                 <div class="stat-card">
@@ -1670,11 +1760,6 @@
                         <span class="solution-card__tag">交通枢纽</span>
                         <h3 class="solution-card__title">轨道交通</h3>
                         <p class="solution-card__desc">为列车控制系统、信号设备、车载娱乐系统提供稳定可靠的工业控制解决方案。</p>
-                        <ul class="solution-card__features">
-                            <li><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>列车控制</li>
-                            <li><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>信号系统</li>
-                            <li><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>车载娱乐</li>
-                        </ul>
                     </div>
                 </article>
 
@@ -1687,11 +1772,6 @@
                         <span class="solution-card__tag">能源电力</span>
                         <h3 class="solution-card__title">电力通讯</h3>
                         <p class="solution-card__desc">保障智能电网、数据中心、通信基站7×24小时稳定运行，提供电力通信可靠保障。</p>
-                        <ul class="solution-card__features">
-                            <li><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>智能电网</li>
-                            <li><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>数据中心</li>
-                            <li><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>通信基站</li>
-                        </ul>
                     </div>
                 </article>
 
@@ -1704,11 +1784,6 @@
                         <span class="solution-card__tag">智能制造</span>
                         <h3 class="solution-card__title">机器视觉</h3>
                         <p class="solution-card__desc">高精度图像处理、缺陷检测、尺寸测量，加速自动化生产质量管控。</p>
-                        <ul class="solution-card__features">
-                            <li><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>AOI检测</li>
-                            <li><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>尺寸测量</li>
-                            <li><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>缺陷识别</li>
-                        </ul>
                     </div>
                 </article>
 
@@ -1721,11 +1796,6 @@
                         <span class="solution-card__tag">新能源</span>
                         <h3 class="solution-card__title">新能源汽车电池</h3>
                         <p class="solution-card__desc">为新能源汽车电池包生产、电池模组检测、充换电站控制系统提供高性能工业计算平台。</p>
-                        <ul class="solution-card__features">
-                            <li><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>电池检测</li>
-                            <li><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>充换电</li>
-                            <li><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>电池管理</li>
-                        </ul>
                     </div>
                 </article>
 
@@ -1738,11 +1808,6 @@
                         <span class="solution-card__tag">智慧物流</span>
                         <h3 class="solution-card__title">快递无人车</h3>
                         <p class="solution-card__desc">末端配送无人车、自动驾驶快递车、低速物流机器人控制系统，助力智慧物流降本增效。</p>
-                        <ul class="solution-card__features">
-                            <li><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>无人配送</li>
-                            <li><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>路径规划</li>
-                            <li><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>远程控制</li>
-                        </ul>
                     </div>
                 </article>
 
@@ -1755,11 +1820,6 @@
                         <span class="solution-card__tag">智慧物流</span>
                         <h3 class="solution-card__title">智能仓储</h3>
                         <p class="solution-card__desc">物流分拣、AGV自动导引车控制、立体仓库管理系统，实现仓储物流全流程自动化。</p>
-                        <ul class="solution-card__features">
-                            <li><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>AGV调度</li>
-                            <li><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>分拣系统</li>
-                            <li><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>WMS管理</li>
-                        </ul>
                     </div>
                 </article>
             </div>
@@ -1919,7 +1979,7 @@
             </div>
             
             <div class="footer-bottom">
-                <p class="footer-copyright">© 2025 苏州安驰电子科技有限公司 版权所有</p>
+                <p class="footer-copyright">© 2004-2026 苏州安驰电子科技有限公司 版权所有</p>
                 <div class="footer-social">
                     <a href="#" aria-label="微信">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -1940,7 +2000,7 @@
     <div class="fab">
         <div class="fab-popup">
             <div class="fab-popup__qr">
-                <img src="img/qrcode.svg" alt="微信二维码">
+                <img src="img/st.png" alt="微信二维码">
             </div>
             <div class="fab-popup__label">扫码添加微信</div>
             <div class="fab-popup__phone">051268128092</div>
@@ -1953,6 +2013,75 @@
     </div>
 
     <script>
+        /* =========================================
+           Hero Carousel
+           ========================================= */
+        (function () {
+            const track   = document.getElementById('heroTrack');
+            const slides  = track.querySelectorAll('.hero-slide');
+            const dots    = document.querySelectorAll('.hero-dot');
+            const btnPrev = document.getElementById('heroPrev');
+            const btnNext = document.getElementById('heroNext');
+            const total   = slides.length;
+            let current   = 0;
+            let timer     = null;
+
+            function goTo(index) {
+                // 移除旧状态
+                slides[current].classList.remove('is-active');
+                dots[current].classList.remove('active');
+
+                current = (index + total) % total;
+
+                // 移动轨道
+                track.style.transform = `translateX(-${current * (100 / total)}%)`;
+
+                // 激活新状态
+                slides[current].classList.add('is-active');
+                dots[current].classList.add('active');
+            }
+
+            function next() { goTo(current + 1); }
+            function prev() { goTo(current - 1); }
+
+            function startAuto() {
+                timer = setInterval(next, 5000);
+            }
+
+            function stopAuto() {
+                clearInterval(timer);
+            }
+
+            // 箭头
+            btnNext.addEventListener('click', function () { stopAuto(); next(); startAuto(); });
+            btnPrev.addEventListener('click', function () { stopAuto(); prev(); startAuto(); });
+
+            // 圆点
+            dots.forEach(function (dot) {
+                dot.addEventListener('click', function () {
+                    stopAuto();
+                    goTo(parseInt(this.dataset.index));
+                    startAuto();
+                });
+            });
+
+            // 触摸滑动
+            var touchStartX = 0;
+            track.addEventListener('touchstart', function (e) {
+                touchStartX = e.touches[0].clientX;
+                stopAuto();
+            }, { passive: true });
+            track.addEventListener('touchend', function (e) {
+                var dx = e.changedTouches[0].clientX - touchStartX;
+                if (Math.abs(dx) > 50) { dx < 0 ? next() : prev(); }
+                startAuto();
+            }, { passive: true });
+
+            // 自动播放
+            startAuto();
+        })();
+
+
         // Header scroll effect
         const header = document.getElementById('header');
         window.addEventListener('scroll', () => {
