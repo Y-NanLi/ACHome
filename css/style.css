@@ -1,0 +1,765 @@
+/* =========================================
+   全局基础
+   ========================================= */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Microsoft YaHei", sans-serif;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+/* =========================================
+   顶部导航
+   ========================================= */
+.header {
+    width: 100%;
+    height: 60px;
+    background: #fff;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 999;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.nav {
+    max-width: 1200px;
+    width: 90%;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    height: 60px;
+    justify-content: space-between;
+    white-space: nowrap; /* 只在此处声明一次，子元素继承 */
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    display: flex;
+    align-items: center;
+}
+
+.logo span {
+    margin-left: 10px;
+}
+
+.nav-center {
+    display: flex;
+    align-items: center;
+}
+
+.nav-list {
+    display: flex;
+    list-style: none;
+}
+
+.nav-list li {
+    margin-left: 30px;
+}
+
+.nav-list li a {
+    text-decoration: none;
+    color: #333;
+    font-size: 14px;
+    transition: color 0.3s;
+}
+
+.nav-list li a:hover,
+.nav-list li a.active {
+    color: #005b96;
+}
+
+.menu-toggle {
+    display: none;
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 4px;
+    position: relative;
+    width: 33px;
+    height: 33px;
+}
+
+.menu-toggle span {
+    display: block;
+    width: 25px;
+    height: 2px;
+    background: #333;
+    margin: 5px 0;
+    transition: transform 0.35s ease, opacity 0.25s ease, top 0.35s ease;
+    position: absolute;
+    left: 4px;
+    border-radius: 2px;
+}
+
+.menu-toggle span:nth-child(1) { top: 5px; }
+.menu-toggle span:nth-child(2) { top: 14px; }
+.menu-toggle span:nth-child(3) { top: 23px; }
+
+/* 激活时变 X */
+.menu-toggle.active span:nth-child(1) {
+    transform: translateY(9px) rotate(45deg);
+}
+.menu-toggle.active span:nth-child(2) {
+    opacity: 0;
+    transform: scaleX(0);
+}
+.menu-toggle.active span:nth-child(3) {
+    transform: translateY(-9px) rotate(-45deg);
+}
+
+/* =========================================
+   侧边菜单
+   ========================================= */
+.sidebar {
+    position: fixed;
+    top: -100%;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background: #005b96;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    transition: top 0.3s ease;
+    padding: 60px 0;
+}
+
+.sidebar.active {
+    top: 0;
+}
+
+.sidebar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.sidebar-logo {
+    font-size: 20px;
+    font-weight: bold;
+    color: #fff;
+}
+
+.close-btn {
+    font-size: 24px;
+    cursor: pointer;
+    color: #fff;
+    background: none;
+    border: none;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.sidebar-nav {
+    list-style: none;
+    padding: 0;
+}
+
+.sidebar-nav li a {
+    text-decoration: none;
+    color: #fff;
+    font-size: 16px;
+    display: block;
+    padding: 15px 20px;
+    transition: background 0.3s;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.sidebar-nav li a:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* =========================================
+   Banner 轮播图
+   ========================================= */
+.banner {
+    width: 100%;
+    height: 600px;
+    margin-top: 60px;
+    position: relative;
+    overflow: hidden;
+}
+
+.carousel {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.carousel-inner {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.carousel-item {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 0.8s ease-in-out;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    text-align: center;
+    background-size: cover;
+    background-position: center;
+}
+
+.carousel-item.active {
+    opacity: 1;
+}
+
+.carousel-item:nth-child(1) {
+    background-image: url('https://vcg02.cfp.cn/creative/vcg/800/new/VCG211558468717.jpg');
+}
+
+.carousel-item:nth-child(2) {
+    background-image: url('https://vcg02.cfp.cn/creative/vcg/800/new/VCG211558468718.jpg');
+}
+
+.carousel-item:nth-child(3) {
+    background-image: url('https://vcg02.cfp.cn/creative/vcg/800/new/VCG211558468719.jpg');
+}
+
+.carousel-item:nth-child(4) {
+    background-image: url('https://vcg02.cfp.cn/creative/vcg/800/new/VCG211558468720.jpg');
+}
+
+.carousel-content {
+    background: rgba(0, 0, 0, 0.5);
+    padding: 40px 60px;
+    border-radius: 8px;
+}
+
+.carousel-content h1 {
+    font-size: 48px;
+    margin-bottom: 20px;
+}
+
+.carousel-content p {
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+.carousel-indicators {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 10px;
+}
+
+.indicator {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.indicator.active {
+    background: #fff;
+}
+
+.carousel-controls {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    transform: translateY(-50%);
+    display: flex;
+    justify-content: space-between;
+    padding: 0 20px;
+    pointer-events: none; /* 不阻挡轮播内容点击 */
+}
+
+.carousel-control {
+    background: rgba(255, 255, 255, 0.3);
+    border: none;
+    color: #fff;
+    font-size: 36px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: auto;
+}
+
+.carousel-control:hover {
+    background: rgba(255, 255, 255, 0.5);
+}
+
+/* =========================================
+   通用板块
+   ========================================= */
+.section {
+    max-width: 1200px;
+    width: 90%;
+    margin: 80px auto;
+}
+
+.title {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.title h2 {
+    font-size: 32px;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.title p {
+    color: #666;
+    font-size: 16px;
+}
+
+/* =========================================
+   产品中心
+   ========================================= */
+.product-box {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.product-item {
+    flex: 1 1 calc(33.333% - 14px);
+    min-width: 280px;
+    background: #f9f9f9;
+    padding: 30px;
+    text-align: center;
+    border-radius: 8px;
+    transition: box-shadow 0.3s, transform 0.3s;
+}
+
+.product-item:hover {
+    box-shadow: 0 6px 20px rgba(0, 91, 150, 0.12);
+    transform: translateY(-3px);
+}
+
+.product-item h3 {
+    font-size: 20px;
+    margin: 20px 0;
+    color: #005b96;
+}
+
+.product-item p {
+    color: #666;
+    line-height: 1.6;
+}
+
+/* =========================================
+   关于我们
+   ========================================= */
+.about {
+    background: #f5f7fa;
+    padding: 80px 0;
+}
+
+.about .title {
+    margin-bottom: 30px;
+}
+
+.about-content {
+    line-height: 2;
+    font-size: 16px;
+    color: #333;
+    text-align: center;
+}
+
+.about-content p {
+    margin-bottom: 8px;
+}
+
+/* =========================================
+   企业优势
+   ========================================= */
+.advantage {
+    display: flex;
+    justify-content: space-between;
+    text-align: center;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.adv-item {
+    flex: 1 1 calc(33.333% - 14px);
+    min-width: 280px;
+}
+
+.adv-item h3 {
+    font-size: 22px;
+    margin: 20px 0;
+    color: #005b96;
+}
+
+.adv-item p {
+    color: #666;
+    line-height: 1.6;
+}
+
+/* =========================================
+   联系我们
+   ========================================= */
+.contact {
+    background: #005b96;
+    color: #fff;
+    padding: 60px 0;
+    text-align: center;
+}
+
+.contact h2 {
+    font-size: 30px;
+    margin-bottom: 30px;
+}
+
+.contact-info p {
+    font-size: 18px;
+    margin-bottom: 15px;
+}
+
+/* =========================================
+   合作伙伴
+   ========================================= */
+.partners {
+    background: #f9f9f9;
+    padding: 60px 0;
+}
+
+.partners-content {
+    max-width: 1200px;
+    width: 90%;
+    margin: 0 auto;
+}
+
+.partners-title {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.partners-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 40px;
+    align-items: center;
+    justify-items: center;
+}
+
+.partner-logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 80px;
+    transition: transform 0.3s ease;
+}
+
+.partner-logo:hover {
+    transform: scale(1.05);
+}
+
+.partner-logo img {
+    max-height: 60px;
+    max-width: 100%;
+    object-fit: contain;
+}
+
+/* =========================================
+   页脚
+   ========================================= */
+.footer {
+    background: #222;
+    color: #999;
+    text-align: center;
+    padding: 30px 0;
+    font-size: 14px;
+}
+
+/* =========================================
+   右侧悬浮栏
+   ========================================= */
+.float-bar {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    z-index: 998;
+}
+
+.float-bar__inner {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
+}
+
+.float-btn {
+    position: relative;
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 0;
+}
+
+.float-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #fff;
+    padding: 8px;
+    box-sizing: border-box;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    display: block;
+    transition: box-shadow 0.3s;
+}
+
+.float-btn:hover .float-icon {
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+}
+
+/* 弹出面板 */
+.float-popup {
+    position: absolute;
+    right: 50px;
+    bottom: 0;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    width: 250px;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease, bottom 0.3s ease;
+}
+
+.float-popup.active {
+    opacity: 1;
+    visibility: visible;
+    bottom: 10px;
+}
+
+.float-popup__list {
+    list-style: none;
+}
+
+.float-popup__item {
+    margin-bottom: 15px;
+}
+
+.float-popup__item--last {
+    margin-bottom: 0;
+}
+
+.float-popup__link {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: #333;
+    font-size: 14px;
+}
+
+.float-popup__icon {
+    width: 24px;
+    height: 24px;
+    margin-right: 10px;
+    flex-shrink: 0;
+}
+
+.float-popup__hint {
+    margin-top: 5px;
+    font-size: 12px;
+    color: #b0b0b0;
+    padding-left: 34px;
+}
+
+.float-popup__hint--phone {
+    color: #ec0819;
+    font-weight: bold;
+}
+
+.float-popup__arrow {
+    color: #b0b0b0;
+}
+
+/* =========================================
+   响应式设计
+   ========================================= */
+@media screen and (max-width: 768px) {
+    /* 导航栏 */
+    .header {
+        background: #005b96;
+        transition: transform 0.35s ease;
+    }
+
+    /* 向下滚动时隐藏导航 */
+    .header.nav-hidden {
+        transform: translateY(-100%);
+    }
+
+    .nav {
+        width: 100%;
+        padding: 0 20px;
+    }
+
+    .logo {
+        font-size: 18px;
+        color: #fff;
+    }
+
+    .logo span {
+        color: #fff;
+    }
+
+    .nav-center {
+        display: none;
+    }
+
+    .menu-toggle {
+        display: block;
+    }
+
+    .menu-toggle span {
+        background: #fff;
+    }
+
+    /* Banner 轮播图 */
+    .banner {
+        height: 400px;
+    }
+
+    .carousel-content h1 {
+        font-size: 28px;
+    }
+
+    .carousel-content p {
+        font-size: 15px;
+    }
+
+    .carousel-content {
+        padding: 24px 30px;
+    }
+
+    .carousel-control {
+        width: 40px;
+        height: 40px;
+        font-size: 28px;
+    }
+
+    .indicator {
+        width: 10px;
+        height: 10px;
+    }
+
+    /* 通用板块 */
+    .section {
+        margin: 60px auto;
+    }
+
+    .title h2 {
+        font-size: 24px;
+    }
+
+    .title p {
+        font-size: 14px;
+    }
+
+    /* 产品中心 */
+    .product-box {
+        gap: 15px;
+    }
+
+    .product-item {
+        flex: 1 1 100%;
+        padding: 20px;
+    }
+
+    .product-item h3 {
+        font-size: 18px;
+    }
+
+    /* 关于我们 */
+    .about {
+        padding: 60px 0;
+    }
+
+    .about-content {
+        font-size: 14px;
+    }
+
+    /* 企业优势 */
+    .adv-item {
+        flex: 1 1 100%;
+    }
+
+    .adv-item h3 {
+        font-size: 20px;
+    }
+
+    /* 联系我们 */
+    .contact {
+        padding: 40px 0;
+    }
+
+    .contact h2 {
+        font-size: 24px;
+    }
+
+    .contact-info p {
+        font-size: 16px;
+    }
+
+    /* 合作伙伴 */
+    .partners {
+        padding: 40px 0;
+    }
+
+    .partners-title h2 {
+        font-size: 24px;
+    }
+
+    .partners-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+    }
+
+    .partner-logo {
+        height: 60px;
+    }
+}
